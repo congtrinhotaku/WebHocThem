@@ -1,0 +1,240 @@
+<%- include('../partials/admin/header') %>
+
+<div class="flex justify-between items-center mb-6">
+  <h2 class="text-2xl font-bold text-gray-800">Quản lý giảng viên</h2>
+</div>
+
+<!-- Table danh sách -->
+<div class="bg-white shadow rounded overflow-x-auto">
+  <table class="min-w-full text-sm text-left">
+    <thead class="bg-gray-200 text-gray-700">
+      <tr>
+        <th class="px-4 py-3">Họ tên</th>
+        <th class="px-4 py-3">Email</th>
+        <th class="px-4 py-3">SĐT</th>
+        <th class="px-4 py-3">Giới tính</th>
+        <th class="px-4 py-3">Zalo</th>
+        <th class="px-4 py-3">Facebook</th>
+        <th class="px-4 py-3">Trình độ</th>
+        <th class="px-4 py-3">Trạng thái</th>
+        <th class="px-4 py-3">Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% giangviens.forEach(function(giangvien) { %>
+        <tr class="border-b hover:bg-gray-50">
+          <td class="px-4 py-3"><%= giangvien.Ten_Nguoi_Dung %></td>
+          <td class="px-4 py-3"><%= giangvien.Email || 'Chưa cập nhật' %></td>
+          <td class="px-4 py-3"><%= giangvien.So_Dien_Thoai || 'Chưa cập nhật' %></td>
+          <td class="px-4 py-3"><%= giangvien.thongTinGiangVien?.gioiTinh || 'Chưa cập nhật' %></td>
+          <!-- Zalo -->
+          <td class="px-4 py-3">
+            <% if (giangvien.thongTinGiangVien?.zalo) { %>
+              <a href="https://zalo.me/<%= giangvien.thongTinGiangVien.zalo %>" 
+                class="text-blue-600 hover:text-blue-800 transition-colors duration-300" 
+                target="_blank">
+                <%= giangvien.thongTinGiangVien.zalo %>
+              </a>
+            <% } else { %>
+              <span class="text-gray-500 italic">Chưa cập nhật</span>
+            <% } %>
+          </td>
+
+         <!-- Facebook -->
+          <td class="px-4 py-3 text-center">
+            <% if (giangvien.thongTinGiangVien?.facebook) { %>
+              <a href="<%= giangvien.thongTinGiangVien.facebook %>" 
+                class="inline-block text-blue-600 hover:text-blue-800 transition-colors duration-300" 
+                target="_blank">
+                <i class="fa-brands fa-facebook text-xl"></i>
+              </a>
+            <% } else { %>
+              <span class="text-gray-500 italic">Chưa cập nhật</span>
+            <% } %>
+          </td>
+
+
+          <td class="px-4 py-3"><%= giangvien.thongTinGiangVien?.trinhDo || 'Chưa cập nhật' %></td>
+          <td class="px-4 py-3"><%= giangvien.thongTinGiangVien?.trangThai || 'Chưa cập nhật' %></td>
+
+          <td class="px-4 py-3 flex space-x-2">
+            <button onclick='openEditModal(<%- JSON.stringify(giangvien) %>)' class="text-blue-600 hover:underline">
+              <i class="fas fa-edit"></i>
+            </button>
+            <form method="POST" action="/admin/giangviens/<%= giangvien._id %>?_method=DELETE" onsubmit="return confirm('Xóa giảng viên này?')">
+              <button class="text-red-600 hover:underline"><i class="fas fa-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination -->
+<div class="flex justify-center mt-6">
+  <nav class="inline-flex shadow-sm rounded-md" aria-label="Pagination">
+    <% if (currentPage > 1) { %>
+      <a href="/admin/teachers?page=<%= currentPage - 1 %>" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-100">Trang trước</a>
+    <% } else { %>
+      <span class="px-4 py-2 text-sm text-gray-400 bg-gray-100 border border-gray-300 rounded-l-md cursor-not-allowed">Trang trước</span>
+    <% } %>
+
+    <% for(let i = 1; i <= totalPages; i++) { %>
+      <a href="/admin/teachers?page=<%= i %>" class="px-4 py-2 text-sm font-medium border border-gray-300 <%= currentPage === i ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-100' %>"><%= i %></a>
+    <% } %>
+
+    <% if (currentPage < totalPages) { %>
+      <a href="/admin/teachers?page=<%= currentPage + 1 %>" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-100">Trang sau</a>
+    <% } else { %>
+      <span class="px-4 py-2 text-sm text-gray-400 bg-gray-100 border border-gray-300 rounded-r-md cursor-not-allowed">Trang sau</span>
+    <% } %>
+  </nav>
+</div>
+
+<!-- Modal chỉnh sửa giảng viên -->
+<div id="editTeacherModal" class="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-white/30 z-50 hidden">
+  <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-2xl overflow-y-auto max-h-screen relative">
+    <button onclick="closeEditTeacherModal()" class="absolute top-2 right-3 text-gray-500 hover:text-black text-xl">&times;</button>
+    <h2 class="text-2xl font-bold mb-6 text-center">Chỉnh sửa giảng viên</h2>
+
+    <form id="editTeacherForm" method="POST" action="" enctype="multipart/form-data" class="space-y-4">
+      <input type="hidden" name="id" id="teacherId">
+
+      <div>
+        <label class="block font-medium">Tên người dùng</label>
+        <input type="text" id="TenNguoiDung" class="w-full border px-4 py-2 rounded-lg bg-gray-100" readonly>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block font-medium">Số điện thoại</label>
+          <input type="text" id="SoDienThoai" class="w-full border px-4 py-2 rounded-lg bg-gray-100" readonly>
+        </div>
+        <div>
+          <label class="block font-medium">Email</label>
+          <input type="email" id="Email" class="w-full border px-4 py-2 rounded-lg bg-gray-100" readonly>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block font-medium">Họ tên</label>
+          <input type="text" name="hoTen" id="HoTen" class="w-full border px-4 py-2 rounded-lg">
+        </div>
+        <div>
+          <label class="block font-medium">Năm sinh</label>
+          <input type="number" name="namSinh" id="NamSinh" class="w-full border px-4 py-2 rounded-lg">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block font-medium">Giới tính</label>
+          <select name="gioiTinh" id="GioiTinh" class="w-full border px-4 py-2 rounded-lg">
+            <option value="nam">Nam</option>
+            <option value="nu">Nữ</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-medium">Trình độ</label>
+          <select name="trinhDo" id="TrinhDo" class="w-full border px-4 py-2 rounded-lg">
+            <option value="cu-nhan">Cử nhân</option>
+            <option value="thac-si">Thạc sĩ</option>
+            <option value="tien-si">Tiến sĩ</option>
+            <option value="ky-su">Kỹ sư</option>
+            <option value="cc-su-pham">Chứng chỉ Sư phạm</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block font-medium">Zalo</label>
+          <input type="text" name="zalo" id="Zalo" class="w-full border px-4 py-2 rounded-lg">
+        </div>
+        <div>
+          <label class="block font-medium">Facebook</label>
+          <input type="text" name="facebook" id="Facebook" class="w-full border px-4 py-2 rounded-lg">
+        </div>
+      </div>
+
+      <div>
+        <label class="block font-medium">Địa chỉ</label>
+        <input type="text" name="diaChi" id="DiaChi" class="w-full border px-4 py-2 rounded-lg">
+      </div>
+
+      <div>
+        <label class="block font-medium">Số năm kinh nghiệm</label>
+        <input type="number" name="soNamKinhNghiem" id="SoNamKinhNghiem" class="w-full border px-4 py-2 rounded-lg">
+      </div>
+
+      <div>
+        <label class="block font-medium">Nơi từng dạy (ngăn cách bởi dấu ,)</label>
+        <input type="text" name="daTungDayO" id="DaTungDayO" class="w-full border px-4 py-2 rounded-lg">
+      </div>
+
+      <div>
+        <label class="block font-medium">Mô tả chung</label>
+        <textarea name="moTaChung" id="MoTaChung" rows="3" class="w-full border px-4 py-2 rounded-lg"></textarea>
+      </div>
+
+      <div>
+        <label class="block font-medium">Trạng thái</label>
+        <select name="trangThai" id="TrangThai" class="w-full border px-4 py-2 rounded-lg">
+          <option value="Hoạt động">Hoạt động</option>
+          <option value="Tạm khóa">Tạm khóa</option>
+          <option value="Đã nghỉ">Đã nghỉ</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block font-medium">Ảnh đại diện</label>
+        <input type="file" name="anhDaiDien" id="AnhDaiDien" class="w-full border px-4 py-2 rounded-lg" accept="image/*">
+      </div>
+
+      <div class="flex justify-end space-x-4 mt-6">
+        <button type="button" onclick="closeEditTeacherModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">Hủy</button>
+        <button type="submit" class="px-3 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">Lưu</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openEditModal(teacher) {
+    const user = {
+      id: teacher._id,
+      tenNguoiDung: teacher.Ten_Nguoi_Dung,
+      email: teacher.Email,
+      soDienThoai: teacher.So_Dien_Thoai
+    };
+    openEditTeacherModal(user, teacher.thongTinGiangVien || {});
+  }
+
+  function openEditTeacherModal(user, teacher) {
+    document.getElementById('editTeacherModal').classList.remove('hidden');
+    document.getElementById('teacherId').value = teacher._id || '';
+    document.getElementById('TenNguoiDung').value = user.tenNguoiDung || '';
+    document.getElementById('SoDienThoai').value = user.soDienThoai || '';
+    document.getElementById('Email').value = user.email || '';
+    document.getElementById('HoTen').value = teacher.hoTen || '';
+    document.getElementById('NamSinh').value = teacher.namSinh || '';
+    document.getElementById('GioiTinh').value = teacher.gioiTinh || '';
+    document.getElementById('TrinhDo').value = teacher.trinhDo || '';
+    document.getElementById('Zalo').value = teacher.zalo || '';
+    document.getElementById('Facebook').value = teacher.facebook || '';
+    document.getElementById('DiaChi').value = teacher.diaChi || '';
+    document.getElementById('SoNamKinhNghiem').value = teacher.soNamKinhNghiem || '';
+    document.getElementById('DaTungDayO').value = teacher.daTungDayO?.join(', ') || '';
+    document.getElementById('MoTaChung').value = teacher.moTaChung || '';
+    document.getElementById('TrangThai').value = teacher.trangThai || '';
+    document.getElementById('editTeacherForm').action = `/admin/giangvien/${user.id}?_method=PUT`;
+  }
+
+  function closeEditTeacherModal() {
+    document.getElementById('editTeacherModal').classList.add('hidden');
+  }
+</script>
+
+<%- include('../partials/admin/footer') %>

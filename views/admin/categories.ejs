@@ -1,0 +1,196 @@
+<%- include('../partials/admin/header') %>
+
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-2xl font-bold text-gray-800">Quản lý danh mục</h2>
+  <a href="#" onclick="openAddModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+    <i class="fas fa-plus mr-2"></i> Thêm danh mục
+  </a>
+</div>
+
+<!-- Search Form -->
+<form method="GET" action="/admin/categories" class="mb-4">
+  <div class="flex items-center space-x-2">
+    <input type="text" name="search" placeholder="Tìm kiếm theo tên danh mục..."
+      class="w-full md:w-1/3 px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring focus:border-blue-300">
+    <button type="submit"
+      class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+      <i class="fas fa-search mr-1"></i>Tìm kiếm
+    </button>
+  </div>
+</form>
+
+<!-- Categories Table -->
+<div class="bg-white shadow rounded overflow-x-auto">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gray-200 text-gray-700 text-left">
+      <tr>
+        <th class="px-4 py-3">Tên danh mục</th>
+        <th class="px-4 py-3">Danh mục lớn</th>
+        <th class="px-4 py-3">Mô tả</th>
+        <th class="px-4 py-3">Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% categories.forEach(function(cat) { %>
+        <tr class="border-b hover:bg-gray-100">
+          <td class="px-4 py-3"><%= cat.Ten_Danh_Muc %></td>
+          <td class="px-4 py-3"><%= cat.Danh_Muc_Lon %></td>
+          <td class="px-4 py-3"><%= cat.Mo_Ta || '—' %></td>
+          <td class="px-4 py-3 flex space-x-2">
+            <a href="#" data-category='<%- JSON.stringify(cat) %>' onclick="handleEditClick(this)" class="text-blue-600 hover:underline">
+              <i class="fas fa-edit"></i>
+            </a>
+            <form action="/admin/categories/<%= cat._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Xóa danh mục này?');">
+              <button type="submit" class="text-red-600 hover:underline"><i class="fas fa-trash-alt"></i></button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal SỬA danh mục -->
+<div id="editCategoryModal" class="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-white/30 z-50 hidden">
+  <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md relative">
+    <button onclick="closeEditModal()" class="absolute top-2 right-3 text-gray-500 hover:text-black text-xl">&times;</button>
+    <h2 class="text-2xl font-bold mb-6 text-center">Chỉnh sửa danh mục</h2>
+    
+    <form id="editCategoryForm" method="POST" action="" class="space-y-4">
+      <div>
+        <label class="block font-medium text-gray-700">Tên danh mục</label>
+        <input type="text" name="Ten_Danh_Muc" id="edit_TenDanhMuc" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+      </div>
+
+      <div>
+        <label class="block font-medium text-gray-700">Danh mục lớn</label>
+        <select name="Danh_Muc_Lon" id="edit_DanhMucLon" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+          <option value="TieuHoc">Tiểu học</option>
+          <option value="THCS">THCS</option>
+          <option value="THPT">THPT</option>
+          <option value="DaiHoc">Đại học</option>
+          <option value="TuHoc">Tự học</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block font-medium text-gray-700">Mô tả</label>
+        <textarea name="Mo_Ta" id="edit_MoTa" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2"></textarea>
+      </div>
+
+      <div class="flex justify-end space-x-4 mt-6">
+        <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">Hủy</button>
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Lưu</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal THÊM danh mục -->
+<div id="addCategoryModal" class="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-white/30 z-50 hidden">
+  <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md relative">
+    <button onclick="closeAddModal()" class="absolute top-2 right-3 text-gray-500 hover:text-black text-xl">&times;</button>
+    <h2 class="text-2xl font-bold mb-6 text-center">Thêm danh mục</h2>
+    
+    <form id="addCategoryForm" method="POST" action="/admin/categories" class="space-y-4">
+      <div>
+        <label class="block font-medium text-gray-700">Tên danh mục</label>
+        <input type="text" name="Ten_Danh_Muc" id="add_TenDanhMuc" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+      </div>
+
+      <div>
+        <label class="block font-medium text-gray-700">Danh mục lớn</label>
+        <select name="Danh_Muc_Lon" id="add_DanhMucLon" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+          <option value="TieuHoc">Tiểu học</option>
+          <option value="THCS">THCS</option>
+          <option value="THPT">THPT</option>
+          <option value="DaiHoc">Đại học</option>
+          <option value="TuHoc">Tự học</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block font-medium text-gray-700">Mô tả</label>
+        <textarea name="Mo_Ta" id="add_MoTa" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2"></textarea>
+      </div>
+
+      <div class="flex justify-end space-x-4 mt-6">
+        <button type="button" onclick="closeAddModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">Hủy</button>
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Lưu</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="flex justify-center mt-6">
+  <nav class="inline-flex shadow-sm rounded-md" aria-label="Pagination">
+    
+    <% if (currentPage > 1) { %>
+      <a href="/admin/categories?page=<%= currentPage - 1 %>"
+         class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-100">
+        Trang trước
+      </a>
+    <% } else { %>
+      <span class="px-4 py-2 text-sm text-gray-400 bg-gray-100 border border-gray-300 rounded-l-md cursor-not-allowed">
+        Trang trước
+      </span>
+    <% } %>
+
+    <% for(let i = 1; i <= totalPages; i++) { %>
+      <a href="/admin/categories?page=<%= i %>"
+         class="px-4 py-2 text-sm font-medium border border-gray-300 
+                <%= currentPage === i 
+                  ? 'bg-blue-500 text-white' 
+                  : 'bg-white text-gray-700 hover:bg-gray-100' %>">
+        <%= i %>
+      </a>
+    <% } %>
+
+    <% if (currentPage < totalPages) { %>
+      <a href="/admin/categories?page=<%= currentPage + 1 %>"
+         class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-100">
+        Trang sau
+      </a>
+    <% } else { %>
+      <span class="px-4 py-2 text-sm text-gray-400 bg-gray-100 border border-gray-300 rounded-r-md cursor-not-allowed">
+        Trang sau
+      </span>
+    <% } %>
+
+  </nav>
+</div>
+
+
+<script>
+  function handleEditClick(element) {
+    try {
+      const cat = JSON.parse(element.getAttribute('data-category'));
+      openEditModal(cat);
+    } catch (err) {
+      console.error("Lỗi khi parse category JSON:", err);
+    }
+  }
+
+  function openEditModal(cat) {
+    console.log('Open edit modal with category:', cat._id);
+    document.getElementById('editCategoryModal').classList.remove('hidden');
+    document.getElementById('edit_TenDanhMuc').value = cat.Ten_Danh_Muc || '';
+    document.getElementById('edit_DanhMucLon').value = cat.Danh_Muc_Lon || '';
+    document.getElementById('edit_MoTa').value = cat.Mo_Ta || '';
+    document.getElementById('editCategoryForm').action = `/admin/categories/${cat._id}?_method=PUT`;
+  }
+
+  function closeEditModal() {
+    document.getElementById('editCategoryModal').classList.add('hidden');
+  }
+
+  function openAddModal() {
+    document.getElementById('addCategoryModal').classList.remove('hidden');
+  }
+
+  function closeAddModal() {
+    document.getElementById('addCategoryModal').classList.add('hidden');
+  }
+</script>
+
+<%- include('../partials/admin/footer') %>

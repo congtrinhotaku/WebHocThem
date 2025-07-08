@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="hidden md:flex flex-col w-64 bg-gradient-to-b from-blue-800 to-blue-900 text-white">
+            <!-- Header -->
+            <div class="flex items-center justify-center h-20 shadow-md">
+                <h1 class="text-2xl font-bold">ADMIN DASH</h1>
+            </div>
+        
+            <!-- Menu -->
+            <div class="overflow-y-auto flex-grow">
+                <ul class="py-4">
+                    <li class="px-6 py-3 bg-blue-700 rounded-lg mx-3 mb-2">
+                        <a href="/admin/dashboard" class="flex items-center">
+                            <i class="fas fa-tachometer-alt mr-3"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="px-6 py-3 hover:bg-blue-700 rounded-lg mx-3 mb-2">
+                        <a href="/admin/users" class="flex items-center">
+                            <i class="fas fa-users mr-3"></i>
+                            <span>Người dùng</span>
+                        </a>
+                    </li>
+                    <li class="px-6 py-3 hover:bg-blue-700 rounded-lg mx-3 mb-2">
+                        <a href="/admin/categories" class="flex items-center">
+                            <i class="fa-solid fa-school mr-3"></i>
+                            <span>Danh Mục</span>
+                        </a>
+                    </li>
+                    <li class="px-6 py-3 hover:bg-blue-700 rounded-lg mx-3 mb-2">
+                        <a href="/admin/teachers" class="flex items-center">
+                            <i class="fa-solid fa-glasses mr-3"></i>
+                            <span>Giảng Viên</span>
+                        </a>    
+                    </li>
+                    <li class="px-6 py-3 hover:bg-blue-700 rounded-lg mx-3 mb-2">
+                        <a href="/admin/subjects" class="flex items-center">
+                            <i class="fa-solid fa-book mr-3"></i>
+                            <span>Môn Học</span>
+                        </a>    
+                    </li>
+                    <li class="px-6 py-3 hover:bg-blue-700 rounded-lg mx-3 mb-2">
+                        <a href="/admin/courses" class="flex items-center">
+                            <i class="fa-solid fa-book-open mr-3"></i>
+                            <span>Khóa Học</span>
+                        </a>    
+                    </li>
+                    <li class="px-6 py-3 hover:bg-blue-700 rounded-lg mx-3 mb-2">
+                        <a href="#" class="flex items-center">
+                            <i class="fas fa-cog mr-3"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        
+            <!-- Logout (cố định dưới cùng) -->
+            <div class="px-6 py-3 hover:bg-red-600 bg-red-500 rounded-lg mx-3 mb-4">
+                <a href="/admin/logout" class="flex items-center">
+                    <i class="fas fa-sign-out-alt mr-3"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto p-6">
+        

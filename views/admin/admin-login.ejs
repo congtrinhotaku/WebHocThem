@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="icon" href="/img/icon.png" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url(/img/Login-page.jpg);
+            background-repeat: no-repeat;
+            display: flex;
+            background-size: cover;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .signup-container {
+            padding-left: 20px;
+            padding-right: 47px;
+            border-radius: 8px;
+            box-shadow: 0 5px 6px black;
+            width: 350px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: #ffffff;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        label {
+            text-align: left;
+            font-size: 0.9rem;
+            color: rgb(2, 254, 255);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: 0.1px solid rgba(2, 255, 255, 0.635);
+            border-radius: 4px;
+            width: 100%;
+            background: transparent;
+            color: white;
+        }
+
+        input:focus {
+            border: 0.1px solid white;
+            outline: 3px solid rgb(2, 255, 255);
+        }
+
+        ::placeholder {
+            color: rgba(72, 166, 166, 0.559);
+        }
+
+        p {
+            color: white;
+        }
+
+        button {
+            padding: 0.8rem;
+            font-size: 1rem;
+            background-color: #023690;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 12px;
+            margin-left: 23px;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: rgb(6, 196, 196);
+        }
+
+        a {
+            text-decoration: none;
+            color: rgb(2, 254, 255);
+        }
+
+        a:hover {
+            outline: none;
+            text-decoration: underline;
+        }
+
+        .error {
+            color: #FD1C03;
+            font-size: 13px;
+            margin-bottom: 2px;
+            text-align: left;
+            display: none;
+        }
+
+        ::-ms-reveal {
+            border: 3px solid rgb(2, 254, 255);
+            border-radius: 50%;
+            width: 30px;
+            height: 21px;
+            color: rgb(2, 254, 255);
+            background-color: white;
+        }
+
+        img {
+            width: 350px;
+            height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="signup-container">
+        <img src="/img/footer-logo.png" alt="Logo">
+        <% if (message) { %>
+        <div class="alert alert-danger text-center" style="color: red; margin-bottom: 10px;">
+            <%= message %>
+        </div>
+        <% } %>
+    
+        <form id="Form" action="/admin/login" method="POST">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Nhập email của bạn">
+            <div class="error" id="email-error"></div>
+    
+            <label for="password">Mật khẩu:</label>
+            <input type="password" id="password" name="password" placeholder="Nhập mật khẩu của bạn">
+            <div class="error" id="password-error"></div>
+    
+            <button type="submit">Đăng nhập</button>
+        </form>
+    </div>
+    
+    <script>
+        const form = document.getElementById('Form');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+    
+        // Hàm kiểm tra tính hợp lệ của email
+        const isValidEmail = (email) => {
+            const re = /^(?!.*\.\.)(?!.*[@._%+-]{2})[a-z0-9](?!.*[._%+-]{2})[a-z0-9._%+-]{0,63}[a-z0-9]@[a-z0-9-]{1,63}(\.[a-z]{2,})+$/;
+            return re.test(email.toLowerCase());
+        };
+    
+        // Hàm xác thực các trường nhập liệu
+        const validateInputs = () => {
+            let isValid = true;
+    
+            // Lấy giá trị của các trường nhập liệu
+            const emailValue = email.value.trim();
+            const passwordValue = password.value.trim();
+    
+            // Xóa tất cả các thông báo lỗi trước đó
+            document.querySelectorAll('.error').forEach(error => {
+                error.innerText = '';
+                error.style.display = 'none';
+            });
+    
+            // Xác thực email
+            if (emailValue === '') {
+                setError(email, 'Email là bắt buộc', 'email-error');
+                isValid = false;
+            } else if (!isValidEmail(emailValue)) {
+                setError(email, 'Vui lòng cung cấp địa chỉ email hợp lệ', 'email-error');
+                isValid = false;
+            }
+    
+            // Xác thực mật khẩu
+            if (passwordValue === '') {
+                setError(password, 'Mật khẩu là bắt buộc', 'password-error');
+                isValid = false;
+            } else if (passwordValue.length < 8) {
+                setError(password, 'Mật khẩu phải có ít nhất 8 ký tự', 'password-error');
+                isValid = false;
+            }
+    
+            return isValid;
+        };
+    
+        // Đặt thông báo lỗi và hiển thị nó
+        const setError = (element, message, errorId) => {
+            const errorDiv = document.getElementById(errorId);
+            errorDiv.innerText = message;
+            errorDiv.style.display = 'block';
+        };
+    
+        // Xử lý khi gửi biểu mẫu
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+    
+            if (validateInputs()) {
+                form.submit();
+            }
+        });
+    </script>
+</body>
+
+</html>
