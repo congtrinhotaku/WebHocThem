@@ -1,0 +1,126 @@
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container layout */
+.container-top {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 64px;
+}
+/* Header */
+.header {
+    background-color: #156ebd;
+    color: white;
+  }
+  
+  .top-header {
+    background-color: #156ebd;
+  }
+  
+  /* Search form */
+  .left-top-header {
+    flex: 1;
+  }
+  
+  .search-form {
+    display: flex;
+    align-items: center;
+    max-width: 400px;
+    background: white;
+    border-radius: 30px;
+    padding: 6px 12px;
+  }
+  
+  .text-search {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 30px;
+  }
+  
+  .btn-search {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #156ebd;
+    cursor: pointer;
+  }
+  
+  /* Buttons */
+  .right-top-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .btn-acc {
+    text-decoration: none;
+    padding: 8px 14px;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: 0.3s;
+  }
+  
+  .btn-login {
+    background-color: white;
+    color: #156ebd;
+    border: 1px solid white;
+  }
+  
+  .btn-register {
+    background-color: #ff6600;
+    color: white;
+    border: 1px solid #ff6600;
+  }
+  
+  .btn-acc:hover {
+    opacity: 0.8;
+  }
+  
+  
+  .bot-header {
+      background-color: #a6dbe7; /* màu nền xanh nhạt */
+      padding: 10px 0;
+    }
+    
+    .container-bot {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex; /* hiện thị theo hàng ngang */
+      justify-content: center; /* căn giữa ngang */
+      align-items: center; /* căn giữa dọc nếu cần */
+      gap: 20px; /* khoảng cách giữa các mục */
+    }
+    
+    .menu ul li a {
+      text-decoration: none; /* bỏ gạch chân */
+      color: #222; /* màu chữ đậm */
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+    
+    .menu ul li a:hover {
+      color: #156ebd; /* đổi màu khi hover */
+    }
+  
+  
