@@ -13,6 +13,7 @@ const NguoiDungSchema = new mongoose.Schema({
   Vai_Tro_Nguoi_Dung: {
     type: String,
     required: true,
+    enum: ['GiangVien','HocVien']
   },
   Trang_Thai_Nguoi_Dung: {
     type: String,
