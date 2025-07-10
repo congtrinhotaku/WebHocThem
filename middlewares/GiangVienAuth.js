@@ -11,8 +11,8 @@ module.exports = async function (req, res, next) {
         return res.redirect("/blocked");
       }
 
-      if (user.Vai_Tro_Nguoi_Dung !== 'HocVien') {
-        return res.status(403).send("Chỉ học viên mới được phép truy cập.");
+      if (user.Vai_Tro_Nguoi_Dung !== 'GiangVien') {
+        return res.status(403).send("Chỉ giảng viên mới được phép truy cập.");
       }
 
       req.user = user;
@@ -21,7 +21,7 @@ module.exports = async function (req, res, next) {
       return res.redirect("/login");
     }
   } catch (err) {
-    console.error("authHocVien middleware error:", err);
+    console.error("authGiangVien middleware error:", err);
     res.status(500).send("Lỗi máy chủ.");
   }
 };
