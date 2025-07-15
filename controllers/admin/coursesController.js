@@ -1,7 +1,6 @@
 const KhoaHoc = require('../../models/KhoaHoc');
 const AppError = require('../../middlewares/errorHandling');
 const GiangVien = require('../../models/GiangVien');
-const NguoiDung = require('../../models/NguoiDung'); // dùng đúng model
 const MonHoc = require('../../models/MonHoc');
 const DanhMuc = require('../../models/DanhMuc');
 
@@ -27,9 +26,8 @@ const loadCourses = async (req, res, next) => {
       .skip((page - 1) * perPage)
       .limit(perPage);
 
-    // Lấy danh sách giảng viên từ NguoiDung có Vai_Tro_Nguoi_Dung là 'GiangVien'
     const [teachers, subjects, categories] = await Promise.all([
-      NguoiDung.find({ Vai_Tro_Nguoi_Dung: 'GiangVien' }, 'Ten_Nguoi_Dung'),
+      GiangVien.find({}, 'hoTen'),
       MonHoc.find({}, 'Ten_Mon_Hoc'),
       DanhMuc.find({}, 'Ten_Danh_Muc')
     ]);

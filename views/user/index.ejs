@@ -84,10 +84,10 @@
                     <a href="" class="card-img"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREQrCRsmBYUZPrLZKPc2eJGi6vgxnzZeh6-g&s" alt="" class="img-fluid w-100 "></a>
                   </div>
                 </div>
-                <% THPT.forEach(function(thpt) { %>
+                <% groupedCourses['THPT'].forEach(function(thpt) { %>
                   <div class="col-6 col-sm-6 col-lg-3">
                     <div class="card" style="width: 18rem;">
-                      <img src="../../uploads/<%= thpt.hinhanh %>" class="card-img-top" alt="...">
+                      <img src="../../uploads/<%= thpt.hinhanh[1] %>" class="card-img-top" alt="...">
                       <div class="card-body">
                         <h3 class="card-title">
                           <%= thpt.Ten_Khoa_Hoc %>

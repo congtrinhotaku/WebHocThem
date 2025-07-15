@@ -1,6 +1,9 @@
 const AppError = require('../../middlewares/errorHandling');
 const khoahoc = require('../../models/KhoaHoc');
 const DanhMuc = require('../../models/DanhMuc');
+const NguoiDung = require('../../models/NguoiDung');
+
+// ======== LOAD TRANG CHỦ ========
 
 const getTrangChu = async (req, res, next) => {
     try {
@@ -11,6 +14,7 @@ const getTrangChu = async (req, res, next) => {
         // Danh sách danh mục bạn muốn nhóm
         const categories = ['TieuHoc', 'THCS', 'THPT', 'DaiHoc', 'TuHoc'];
 
+
         // Nhóm khóa học theo Danh_Muc_Lon và chỉ lấy 6 mỗi nhóm
         const groupedCourses = {};
 
@@ -20,7 +24,14 @@ const getTrangChu = async (req, res, next) => {
                 .slice(0, 6);
         });
 
-        res.render('index', groupedCourses); // Truyền từng nhóm theo key tên danh mục
+        //session 
+        const user = await NguoiDung.findOne({ Email: req.session.email });
+
+
+        res.render('index', {
+            groupedCourses,
+            user
+        });
     } catch (err) {
         console.error('Lỗi khi load danh sách khóa học:', err);
         next(new AppError('Lỗi khi tải danh sách khóa học', 500));

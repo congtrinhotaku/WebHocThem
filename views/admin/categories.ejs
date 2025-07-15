@@ -38,7 +38,7 @@
           <td class="px-4 py-3"><%= cat.Mo_Ta || '—' %></td>
           <td class="px-4 py-3 flex space-x-2">
             <a href="#" data-category='<%- JSON.stringify(cat) %>' onclick="handleEditClick(this)" class="text-blue-600 hover:underline">
-              <i class="fas fa-edit"></i>
+              <i class="fas fa-edit"></i> 
             </a>
             <form action="/admin/categories/<%= cat._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Xóa danh mục này?');">
               <button type="submit" class="text-red-600 hover:underline"><i class="fas fa-trash-alt"></i></button>

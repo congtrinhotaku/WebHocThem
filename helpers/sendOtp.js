@@ -1,29 +1,27 @@
-const multer = require('multer');
+const transporter = require('../services/otpSender');
+const fs = require("fs");
+const path = require("path");
 
-// Set up multer storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-      cb(null, 'uploads/'); // Destination folder for uploads
-  },
-  filename: (req, file, cb) => {
-      cb(null, Date.now() + '-' + file.originalname); // Unique filename to avoid conflicts
-  }
-});
+// Read HTML template
+const emailTemplatePath = path.join(__dirname, '/../public/otp.html');
+const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
 
-// File type filter (only images)
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-  if (allowedTypes.includes(file.mimetype)) {
-      cb(null, true);  // Accept the file
-  } else {
-      cb(new Error('Only .jpg, .jpeg, and .png files are allowed'), false); // Reject the file
-  }
+let sendOtp = async (otp, email, name) => {
+    let personalizedHtml = emailTemplate.replace(`{{OTP}}`, otp);
+    personalizedHtml = personalizedHtml.replace(`{{NAME}}`, name);
+    try {
+        await transporter.sendMail({
+            from: process.env.NODEMAILER_EMAIL, // Use email from environment variables
+            to: email,
+            subject: 'Your OTP Code',
+            html: personalizedHtml,
+        });
+        // console.log('OTP sent successfully!')
+    } catch (err) {
+        console.error('Failed to send OTP:', err.message);
+        console.error('Error details:', err);
+    }
 };
 
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
-});
-
-module.exports = upload;
+module.exports = sendOtp;
+ 

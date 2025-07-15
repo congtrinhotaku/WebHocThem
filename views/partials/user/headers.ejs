@@ -11,9 +11,15 @@
                 </form>
               </div>
               <div class="right-top-header">
-                <a class="btn-acc btn-login" href="/loginv2">Đăng Nhập</a>
-                <a class="btn-acc btn-register" href="/loginv2/signup.php">Đăng Ký</a>
+                <% if (user) { %>
+                  <span class="welcome-text">Xin chào, <%= user.Ten_Nguoi_Dung %></span>
+                  <a class="btn-acc btn-logout" href="/logout">Đăng Xuất</a>
+                <% } else { %>
+                  <a class="btn-acc btn-login" href="/login">Đăng Nhập</a>
+                  <a class="btn-acc btn-register" href="/register">Đăng Ký</a>
+                <% } %>
               </div>
+
             </div>
           </div>
         </div>
