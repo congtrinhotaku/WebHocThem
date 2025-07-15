@@ -1,0 +1,106 @@
+const { assign } = require('nodemailer/lib/shared');
+const GiangVien = require('../../models/GiangVien'); // Sửa lại đường dẫn model nếu cần
+const NguoiDung = require('../../models/NguoiDung');
+
+
+const loadprofile = async (req, res, next) => {
+    try {
+        const user = await NguoiDung.findOne({ Email: req.session.email });
+
+        if (!user) {
+            return res.status(404).send('Không tìm thấy người dùng.');
+        }
+
+        let profile = await GiangVien.findOne({ maNguoiDung: user._id });
+
+        if (!profile) {
+            const newProfile = new GiangVien({
+                maNguoiDung: user._id,
+                hoTen: user.Ten_Nguoi_Dung,
+
+            });
+
+            await newProfile.save();
+            profile = await GiangVien.findOne({ maNguoiDung: user._id });
+        }
+
+        res.render('profile', { profile, user });
+
+    } catch (err) {
+        console.error('Lỗi loadprofile:', err);
+        res.status(500).send('Lỗi server khi tải profile');
+    }
+};
+
+
+// Upload ảnh đại diện
+const uploadAvatar = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const avatarBase64 = req.file
+            ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
+            : null;
+
+        await GiangVien.findByIdAndUpdate(id, { anhDaiDien: avatarBase64 });
+
+        res.redirect('/giangvien/profile');
+    } catch (err) {
+        console.error('❌ Lỗi upload avatar:', err);
+        res.status(500).send('Lỗi khi upload ảnh');
+    }
+};
+
+module.exports = {
+    loadprofile,
+    uploadAvatar
+};
+
+// exports.updateGiangVien = async (req, res) => {
+//     try {
+//         const { name, phone, subject, degree } = req.body;
+
+//         await GiangVien.findByIdAndUpdate(req.params.id, {
+//             name,
+//             phone,
+//             subject,
+//             degree,
+//         });
+
+//         res.status(200).json({ success: true, message: 'Đã cập nhật' });
+//     } catch (error) {
+//         console.error('Lỗi cập nhật giảng viên:', error);
+//         res.status(500).json({ success: false, message: 'Lỗi server' });
+//     }
+// };
+
+// exports.uploadAvatar = async (req, res) => {
+//     try {
+//         if (!req.file) {
+//             return res.status(400).json({ success: false, message: 'Không có file được upload' });
+//         }
+
+//         const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+
+//         const giangvien = await GiangVien.findByIdAndUpdate(
+//             req.params.id,
+//             { avatar: base64Image },
+//             { new: true }
+//         );
+
+//         res.status(200).json({ success: true, newAvatar: giangvien.avatar });
+//     } catch (err) {
+//         console.error('Lỗi upload avatar:', err);
+//         res.status(500).json({ success: false });
+//     }
+// };
+
+// exports.showProfile = async (req, res) => {
+//     try {
+//         const users = await GiangVien.find();
+//         res.render('profile', { users }); // Hiển thị danh sách giảng viên
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send('Lỗi server');
+//     }
+// };

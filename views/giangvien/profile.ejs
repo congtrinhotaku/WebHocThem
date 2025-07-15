@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chỉnh sửa thông tin giảng viên</title>
+    <link rel="stylesheet" href="/stylesheets/users/header.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 py-8 ">
+    <%- include('../partials/user/headers') %>
+
+        <div class="w-full max-w-screen-2xl mx-auto bg-white rounded-lg shadow-lg flex overflow-hidden px-10 py-8">
+            <!-- Sidebar -->
+            <div class="w-1/4 bg-blue-50 p-6 flex flex-col justify-star min-h-full border-r border-gray-200">
+                <!-- Avatar và thông tin giảng viên -->
+                <div class="flex flex-col items-center text-center">
+                    <!-- Avatar -->
+                    <img src="<%= profile.anhDaiDien || 'https://via.placeholder.com/120x120?text=No+Image' %>"
+                        class="w-28 h-28 object-cover rounded-full border shadow cursor-pointer hover:opacity-80 transition"
+                        alt="avatar" onclick="document.getElementById('avatarInput').click()" />
+
+                    <!-- Input file ẩn -->
+                    <form id="avatarForm" action="/giangvien/upload-avatar/<%= profile._id %>" method="POST"
+                        enctype="multipart/form-data">
+                        <input type="file" id="avatarInput" name="avatar" accept="image/*" class="hidden"
+                            onchange="document.getElementById('avatarForm').submit()" />
+                    </form>
+
+                    <!-- Tên và email -->
+                    <h2 class="mt-4 text-xl font-semibold text-gray-800">
+                        <%= profile.hoTen %>
+                    </h2>
+                    <p class="text-sm text-gray-500">
+                        <%= profile.email %>
+                    </p>
+                </div>
+
+                <!-- Menu sidebar -->
+                <nav class="mt-8 space-y-2">
+                    <a href="#"
+                        class="flex items-center px-4 py-2 rounded text-blue-700 bg-blue-100 font-medium hover:bg-blue-200 transition">
+                        <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        Thông tin cá nhân
+                    </a>
+
+                    <a href="#" class="flex items-center px-4 py-2 rounded text-gray-700 hover:bg-blue-100 transition">
+                        <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        Tạo khóa học mới
+                    </a>
+
+                    <a href="#" class="flex items-center px-4 py-2 rounded text-gray-700 hover:bg-blue-100 transition">
+                        <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path
+                                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14m-6 0V10m6 4H9m0 0L4.447 15.382A1 1 0 013 14.382V9.618a1 1 0 011.447-.894L9 10"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        Thêm video bài giảng
+                    </a>
+                </nav>
+            </div>
+            <!-- Main content -->
+            <div class="w-2/3 p-8">
+                <h1 class="text-2xl font-bold text-gray-700 mb-6">Chỉnh sửa thông tin giảng viên</h1>
+
+                <form action="/giangvien/capnhat" method="POST" enctype="multipart/form-data" class="space-y-6">
+                    <input type="hidden" name="maNguoiDung" value="<%= profile.maNguoiDung %>">
+
+                    <!-- Họ tên -->
+                    <div>
+                        <label class="block text-gray-700 font-medium">Họ tên</label>
+                        <input name="hoTen" value="<%= profile.hoTen %>"
+                            class="mt-1 block w-full border border-gray-300 rounded px-4 py-2" required>
+                    </div>
+
+                    <!-- Năm sinh và Giới tính -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Năm sinh -->
+                        <div>
+                            <label for="namSinh" class="block text-gray-700 font-medium mb-1">Năm sinh</label>
+                            <input type="number" name="namSinh" id="namSinh" value="<%= profile.namSinh %>" min="1900"
+                                max="2025"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                required>
+                        </div>
+
+                        <!-- Giới tính -->
+                        <div>
+                            <label for="gioiTinh" class="block text-gray-700 font-medium mb-1">Giới tính</label>
+                            <select name="gioiTinh" id="gioiTinh"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                required>
+                                <option value="nam" <%=profile.gioiTinh==='nam' ? 'selected' : '' %>>Nam</option>
+                                <option value="nu" <%=profile.gioiTinh==='nu' ? 'selected' : '' %>>Nữ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Zalo & Facebook -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 font-medium">Zalo</label>
+                            <input name="zalo" value="<%= profile.zalo || '' %>"
+                                class="mt-1 block w-full border border-gray-300 rounded px-4 py-2">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium">Facebook</label>
+                            <input name="facebook" value="<%= profile.facebook || '' %>"
+                                class="mt-1 block w-full border border-gray-300 rounded px-4 py-2">
+                        </div>
+                    </div>
+
+                    <!-- Địa chỉ -->
+                    <div>
+                        <label class="block text-gray-700 font-medium">Địa chỉ</label>
+                        <input name="diaChi" value="<%= profile.diaChi || '' %>"
+                            class="mt-1 block w-full border border-gray-300 rounded px-4 py-2">
+                    </div>
+                    <!-- Trình độ và Kinh nghiệm -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 font-medium">Trình độ</label>
+                            <select name="trinhDo" class="mt-1 block w-full border border-gray-300 rounded px-4 py-2">
+                                <option value="cu-nhan" <%=profile.trinhDo==='cu-nhan' ? 'selected' : '' %>>Cử nhân
+                                </option>
+                                <option value="thac-si" <%=profile.trinhDo==='thac-si' ? 'selected' : '' %>>Thạc sĩ
+                                </option>
+                                <option value="tien-si" <%=profile.trinhDo==='tien-si' ? 'selected' : '' %>>Tiến sĩ
+                                </option>
+                                <option value="ky-su" <%=profile.trinhDo==='ky-su' ? 'selected' : '' %>>Kỹ sư</option>
+                                <option value="cc-su-pham" <%=profile.trinhDo==='cc-su-pham' ? 'selected' : '' %>>Chứng
+                                    chỉ
+                                    SP</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium">Số năm kinh nghiệm</label>
+                            <input type="number" name="soNamKinhNghiem" value="<%= profile.soNamKinhNghiem %>"
+                                class="mt-1 block w-full border border-gray-300 rounded px-4 py-2">
+                        </div>
+                    </div>
+
+                    <!-- Mô tả -->
+                    <div>
+                        <label class="block text-gray-700 font-medium">Mô tả chung</label>
+                        <textarea name="moTaChung" rows="4"
+                            class="mt-1 block w-full border border-gray-300 rounded px-4 py-2"><%= profile.moTaChung || '' %></textarea>
+                    </div>
+
+                    <!-- Trạng thái -->
+                    <div>
+                        <label class="block text-gray-700 font-medium">Trạng thái</label>
+                        <select name="trangThai" class="mt-1 block w-full border border-gray-300 rounded px-4 py-2">
+                            <option value="Hoạt động" <%=profile.trangThai==='Hoạt động' ? 'selected' : '' %>>Hoạt động
+                            </option>
+                            <option value="Tạm khóa" <%=profile.trangThai==='Tạm khóa' ? 'selected' : '' %>>Tạm khóa
+                            </option>
+                            <option value="Đã nghỉ" <%=profile.trangThai==='Đã nghỉ' ? 'selected' : '' %>>Đã nghỉ
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="text-right pt-4">
+                        <button type="submit"
+                            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+                            Lưu thay đổi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+</body>
+
+</html>

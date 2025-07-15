@@ -9,6 +9,8 @@ const morgan = require ("morgan")
 const bcrypt = require("bcrypt");
 const userRouter = require ("./routes/userRouter")
 const adminRouter = require ("./routes/adminRouter")
+const giangvienRouter = require("./routes/giangvienRouter")
+
 db()    
 
 app.use(methodOverride('_method'));
@@ -31,7 +33,7 @@ app.use((req,res,next)=>{
 })
 
 app.set("view engine","ejs")
-app.set("views",[path.join(__dirname,'views/user'),path.join(__dirname,'views/admin')])
+app.set("views", [path.join(__dirname, 'views/user'), path.join(__dirname, 'views/admin'), path.join(__dirname, 'views/giangvien')])
 app.use(express.static(path.join(__dirname,"public")))
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -39,6 +41,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use("/",userRouter)
 app.use("/admin",adminRouter)
+app.use("/giangvien", giangvienRouter)
 
 
 app.use((err, req, res, next) => {
