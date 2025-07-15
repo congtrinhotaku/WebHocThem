@@ -1,7 +1,7 @@
 const { assign } = require('nodemailer/lib/shared');
 const GiangVien = require('../../models/GiangVien'); // Sửa lại đường dẫn model nếu cần
 const NguoiDung = require('../../models/NguoiDung');
-
+const AppError = require('../../middlewares/errorHandling')
 
 const loadprofile = async (req, res, next) => {
     try {
@@ -32,6 +32,54 @@ const loadprofile = async (req, res, next) => {
     }
 };
 
+const postprofile = async (req, res, next) => {
+    try {
+        const {
+            _id,
+            hoTen,
+            namSinh,
+            gioiTinh,
+            zalo,
+            facebook,
+            diaChi,
+            trinhDo,
+            soNamKinhNghiem,
+            moTaChung,
+            trangThai
+        } = req.body;
+        console.log(req.body);
+        const updateData = {
+            hoTen,
+            namSinh,
+            gioiTinh,
+            zalo,
+            facebook,
+            diaChi,
+            trinhDo,
+            soNamKinhNghiem,
+            moTaChung,
+            trangThai,
+            updatedAt: new Date()
+        };
+
+        const profile = await GiangVien.findByIdAndUpdate(
+            _id,
+            updateData,
+            { new: true, upsert: false }
+        );
+
+        if (!profile) {
+            console.log("Không tìm thấy giảng viên với _id:", _id);
+            return res.status(404).send('Không tìm thấy giảng viên');
+        }
+
+        res.redirect('/giangvien/profile'); // hoặc render lại nếu muốn
+    } catch (err) {
+        console.log("Lỗi lưu profile:", err);
+        next(new AppError('Xin lỗi, đã xảy ra lỗi. Vui lòng thử lại sau.', 500));
+    }
+};
+
 
 // Upload ảnh đại diện
 const uploadAvatar = async (req, res) => {
@@ -53,7 +101,8 @@ const uploadAvatar = async (req, res) => {
 
 module.exports = {
     loadprofile,
-    uploadAvatar
+    uploadAvatar,
+    postprofile
 };
 
 // exports.updateGiangVien = async (req, res) => {

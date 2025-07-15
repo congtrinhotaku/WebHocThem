@@ -12,7 +12,7 @@ const upload = multer({ storage });
 
 // Hiển thị trang profile giảng viên
 router.get('/profile', GiangVienAuth, giangvienController.loadprofile);
-
+router.post('/profile',GiangVienAuth, giangvienController.postprofile);
 router.post('/upload-avatar/:id', upload.single('avatar'), giangvienController.uploadAvatar);
 
 
