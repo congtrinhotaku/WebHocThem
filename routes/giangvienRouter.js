@@ -3,17 +3,15 @@ const router = express.Router();
 const multer = require('multer');
 const giangvienController = require('../controllers/giangvien/profileControllers');
 const GiangVienAuth = require('../middlewares/giangvienAuth');
+const upload = require('../helpers/multer');
 
-
-// Middleware upload
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
 
 
 // Hiển thị trang profile giảng viên
 router.get('/profile', GiangVienAuth, giangvienController.loadprofile);
 router.post('/profile',GiangVienAuth, giangvienController.postprofile);
 router.post('/upload-avatar/:id', upload.single('avatar'), giangvienController.uploadAvatar);
+
 
 
 // // Cập nhật thông tin giảng viên

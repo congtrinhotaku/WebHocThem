@@ -27,6 +27,14 @@ router.get("/otpsend", userController.otpSend);
 router.get("/resend-otp", userController.resendOtp); // Gửi lại OTP
 
 
+
+//profile - chỉnh sửa profile, đổi mật khẩu...
+router.get("/profile", userController.loadProfile);
+
+
+
+
+
 // Đăng xuất
 router.get("/logout", userController.logout);
 

@@ -2,7 +2,7 @@ const { assign } = require('nodemailer/lib/shared');
 const GiangVien = require('../../models/GiangVien'); // Sửa lại đường dẫn model nếu cần
 const NguoiDung = require('../../models/NguoiDung');
 const AppError = require('../../middlewares/errorHandling')
-
+const path = require('path');
 const loadprofile = async (req, res, next) => {
     try {
         const user = await NguoiDung.findOne({ Email: req.session.email });
@@ -47,7 +47,6 @@ const postprofile = async (req, res, next) => {
             moTaChung,
             trangThai
         } = req.body;
-        console.log(req.body);
         const updateData = {
             hoTen,
             namSinh,
@@ -81,16 +80,20 @@ const postprofile = async (req, res, next) => {
 };
 
 
-// Upload ảnh đại diện
+
 const uploadAvatar = async (req, res) => {
     try {
         const id = req.params.id;
 
-        const avatarBase64 = req.file
-            ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
-            : null;
+        if (!req.file) {
+            return res.status(400).send('Không có file nào được tải lên');
+        }
 
-        await GiangVien.findByIdAndUpdate(id, { anhDaiDien: avatarBase64 });
+        // Lấy tên file được lưu vào thư mục 'uploads/'
+        const avatarPath = path.join('/uploads', req.file.filename); // để EJS dùng hiển thị
+
+        // Cập nhật đường dẫn ảnh trong MongoDB
+        await GiangVien.findByIdAndUpdate(id, { anhDaiDien: avatarPath });
 
         res.redirect('/giangvien/profile');
     } catch (err) {
@@ -98,6 +101,7 @@ const uploadAvatar = async (req, res) => {
         res.status(500).send('Lỗi khi upload ảnh');
     }
 };
+
 
 module.exports = {
     loadprofile,

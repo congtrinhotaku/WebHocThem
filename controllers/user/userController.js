@@ -254,6 +254,40 @@ const login = async (req, res, next) => {
   }
 };
 
+// ======== LOAD PROFILE ========
+const loadProfile = async (req, res, next) => {
+  try {
+    const user = await NguoiDung.findOne({ Email: req.session.email });
+    if (!user) {
+      return res.redirect('/login');
+    }
+    res.render('userprofile', { user });
+  } catch (error) {
+    next(new AppError('Không thể tải trang profile', 500));
+  }
+};
+
+// ======== CẬP NHẬT PROFILE ========
+const updateProfile = async (req, res, next) => {
+  try {
+    const { Ten_Nguoi_Dung, So_Dien_Thoai, Dia_Chi } = req.body;
+    const email = req.session.email;
+
+    const updatedUser = await NguoiDung.findOneAndUpdate(
+      { Email: email },
+      { Ten_Nguoi_Dung, So_Dien_Thoai, Dia_Chi },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: 'Người dùng không tồn tại' });
+    }
+
+    res.status(200).json({ success: true, message: 'Cập nhật thông tin thành công', user: updatedUser });
+  } catch (error) {
+    next(new AppError('Cập nhật thông tin thất bại', 500));
+  }
+};
 
 
 // ======== ĐĂNG XUẤT ========
@@ -276,5 +310,7 @@ module.exports = {
   resetPasswordPost,
   logout,
   loadLogin,
-  loadSignup
+  loadSignup,
+  loadProfile,
+  updateProfile
 };
