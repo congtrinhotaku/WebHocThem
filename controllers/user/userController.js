@@ -235,12 +235,10 @@ const login = async (req, res, next) => {
 
     if (userData) {
       const isMatch = await comparePassword(req.body.password, userData.Mat_khau);
-
       if (isMatch) {
         req.session.loginSession = true;
         req.session.email = userData.Email;
         req.session.role = userData.Vai_Tro_Nguoi_Dung; // nếu bạn cần phân quyền
-
         return res.redirect('/');
       } else {
         return res.render('login', { error: 'Mật khẩu không chính xác' });

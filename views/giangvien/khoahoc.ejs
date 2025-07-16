@@ -1,0 +1,113 @@
+
+    <%- include('../partials/user/headers') %>
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <div class="w-1/4 bg-blue-50 p-6 flex flex-col justify-start border-r border-gray-200">
+            <!-- Menu sidebar -->
+            <nav class="mt-8 space-y-2">
+                <a href="/giangvien/profile"
+                    class="flex items-center px-4 py-2 rounded text-blue-700  font-medium hover:bg-blue-200 transition">
+                    <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    Thông tin cá nhân
+                </a>
+                <a href="#" class="flex items-center px-4 py-2 rounded text-gray-700 bg-blue-100 hover:bg-blue-100 transition">
+                    <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    Tạo khóa học mới
+                </a>
+                <a href="/giangvien/baigiang" class="flex items-center px-4 py-2 rounded text-gray-700 hover:bg-blue-100 transition">
+                    <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path
+                            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14m-6 0V10m6 4H9m0 0L4.447 15.382A1 1 0 013 14.382V9.618a1 1 0 011.447-.894L9 10"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    Thêm video bài giảng
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main content -->
+        <!-- Bên trong layout chia đôi: sidebar (1/3 hoặc 1/4) + nội dung (2/3) -->
+        <div class="w-2/3 p-8">
+            <h1 class="text-2xl font-bold text-gray-700 mb-6 text-center">Thêm Khóa Học</h1>
+            <form action="/giangvien/khoahoc/them" method="POST" enctype="multipart/form-data" class="space-y-6">
+
+                <!-- Tên khóa học -->
+                <div>
+                    <label for="Ten_Khoa_Hoc" class="block text-gray-700 font-medium">Tên Khóa Học</label>
+                    <input type="text" name="Ten_Khoa_Hoc" id="Ten_Khoa_Hoc" required
+                        class="mt-1 block w-full border border-gray-300 rounded px-4 py-2">
+                </div>
+
+                <!-- Giảng viên & Môn học -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="ID_Mon_Hoc" class="block text-gray-700 font-medium">Môn Học</label>
+                        <select name="ID_Mon_Hoc" id="ID_Mon_Hoc" required
+                            class="mt-1 block w-full border border-gray-300 rounded px-4 py-2 bg-white">
+                            <option value="">-- Chọn Môn Học --</option>
+                            <% danhSachMonHoc.forEach(mon=> { %>
+                                <option value="<%= mon._id %>">
+                                    <%= mon.Ten_Mon_Hoc %>
+                                </option>
+                                <% }) %>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Danh mục & Giá tiền -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="ID_Danh_Muc" class="block text-gray-700 font-medium">Danh Mục</label>
+                        <select name="ID_Danh_Muc" id="ID_Danh_Muc" required
+                            class="mt-1 block w-full border border-gray-300 rounded px-4 py-2 bg-white">
+                            <option value="">-- Chọn Danh Mục --</option>
+                            <% danhSachDanhMuc.forEach(dm=> { %>
+                                <option value="<%= dm._id %>">
+                                    <%= dm.Ten_Danh_Muc %>
+                                </option>
+                                <% }) %>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="Gia_Tien" class="block text-gray-700 font-medium">Giá Tiền (VNĐ)</label>
+                        <input type="number" name="Gia_Tien" id="Gia_Tien" required min="0"
+                            class="mt-1 block w-full border border-gray-300 rounded px-4 py-2">
+                    </div>
+                </div>
+
+                <!-- Mô tả -->
+                <div>
+                    <label for="Mo_Ta" class="block text-gray-700 font-medium">Mô Tả</label>
+                    <textarea name="Mo_Ta" id="Mo_Ta" rows="4"
+                        class="mt-1 block w-full border border-gray-300 rounded px-4 py-2"></textarea>
+                </div>
+
+                <!-- Hình ảnh -->
+                <div>
+                    <label for="hinhanh" class="block text-gray-700 font-medium">Hình Ảnh</label>
+                    <input type="file" name="hinhanh" id="hinhanh" multiple class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+                file:rounded-full file:border-0 file:text-sm file:font-semibold
+                file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                </div>
+
+                <!-- Submit -->
+                <div class="text-right pt-4">
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+                        Thêm Khóa Học
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</body>
+
+</html>

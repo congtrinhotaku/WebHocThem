@@ -1,0 +1,108 @@
+<%- include('../partials/user/headers') %>
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <div class="w-1/4 bg-blue-50 p-6 flex flex-col justify-start border-r border-gray-200">
+            <!-- Menu sidebar -->
+            <nav class="mt-8 space-y-2">
+                <a href="/giangvien/profile"
+                    class="flex items-center px-4 py-2 rounded text-blue-700  font-medium hover:bg-blue-200 transition">
+                    <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    Thông tin cá nhân
+                </a>
+                <a href="/giangvien/khoahoc"
+                    class="flex items-center px-4 py-2 rounded text-gray-700  hover:bg-blue-100 transition">
+                    <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    Tạo khóa học mới
+                </a>
+                <a href="#" class="flex items-center px-4 py-2 rounded text-gray-700 bg-blue-100 hover:bg-blue-100 transition">
+                    <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path
+                            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14m-6 0V10m6 4H9m0 0L4.447 15.382A1 1 0 013 14.382V9.618a1 1 0 011.447-.894L9 10"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    Thêm video bài giảng
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main content -->
+        <!-- Bên trong layout chia đôi: sidebar (1/3 hoặc 1/4) + nội dung (2/3) -->
+        <div class="w-2/3 p-8">
+            <h1 class="text-2xl font-bold text-center mb-6 text-blue-600">Thêm Bài Giảng Mới</h1>
+        
+            <form action="/giangvien/baigiang/them" method="POST" enctype="multipart/form-data" class="space-y-6">
+                <!-- Chọn khóa học -->
+                <div>
+                    <label for="ID_Khoa_Hoc" class="block font-medium text-gray-700 mb-1">Khóa học</label>
+                    <select name="ID_Khoa_Hoc" id="ID_Khoa_Hoc" required
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        <% danhSachKhoaHoc.forEach(khoa=> { %>
+                            <option value="<%= khoa._id %>">
+                                <%= khoa.Ten_Khoa_Hoc %>
+                            </option>
+                            <% }) %>
+                    </select>
+                </div>
+        
+                <!-- Tên bài giảng -->
+                <div>
+                    <label for="Ten_Bai_Giang" class="block font-medium text-gray-700 mb-1">Tên bài giảng</label>
+                    <input type="text" name="Ten_Bai_Giang" id="Ten_Bai_Giang" required
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+        
+                <!-- Mô tả -->
+                <div>
+                    <label for="Mo_Ta" class="block font-medium text-gray-700 mb-1">Mô tả</label>
+                    <textarea name="Mo_Ta" id="Mo_Ta" rows="4"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+                </div>
+        
+                <!-- Video URL -->
+                <div>
+                    <label for="Video_url" class="block font-medium text-gray-700 mb-1">Video URL</label>
+                    <input type="url" name="Video_url" id="Video_url"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+        
+                <!-- Ảnh bìa -->
+                <div>
+                    <label for="Anh_Bia" class="block font-medium text-gray-700 mb-1">Ảnh bìa</label>
+                    <input type="file" name="Anh_Bia" id="Anh_Bia" accept="image/*"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+        
+                <!-- Thứ tự -->
+                <div>
+                    <label for="Thu_Tu" class="block font-medium text-gray-700 mb-1">Thứ tự</label>
+                    <input type="number" name="Thu_Tu" id="Thu_Tu" min="1"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+        
+                <!-- Học thử -->
+                <div class="flex items-center">
+                    <input type="checkbox" name="Hoc_Thu" id="Hoc_Thu" value="true" class="mr-2 w-5 h-5 text-blue-600 rounded">
+                    <label for="Hoc_Thu" class="text-gray-700">Cho học thử</label>
+                </div>
+        
+                <!-- Nút submit -->
+                <div class="text-right">
+                    <button type="submit"
+                        class="bg-blue-600 text-white font-semibold px-6 py-2 rounded-xl hover:bg-blue-700 transition">
+                        Thêm bài giảng
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    </body>
+
+    </html>
