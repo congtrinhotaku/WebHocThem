@@ -53,9 +53,9 @@
             </a>
           </td>
           <td class="px-4 py-3 flex space-x-2 justify-center">
-            <a href="" class="text-blue-600 hover:underline">
+            <button onclick='handleEditClick(this)' data-course='<%- JSON.stringify(khoaHoc) %>' class="text-blue-600 hover:underline">
               <i class="fas fa-edit"></i>
-            </a>
+            </button>
             <form method="POST" action="/admin/khoahocs/<%= khoaHoc._id %>?_method=DELETE" onsubmit="return confirm('Xóa khóa học này?')">
               <button class="text-red-600 hover:underline">
                 <i class="fas fa-trash"></i>
@@ -144,9 +144,9 @@
 
   <!-- Modal Chỉnh sửa khóa học -->
   <div id="editCourseModal" class="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-white/30 z-50 hidden">
-    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-2xl relative">
+    <div class="bg-white rounded-2xl shadow-xl p-2 w-full max-w-2xl relative">
       <button onclick="closeEditCourseModal()" class="absolute top-2 right-3 text-gray-500 hover:text-black text-xl">&times;</button>
-      <h2 class="text-2xl font-bold mb-6 text-center">Chỉnh sửa khóa học</h2>
+      <h2 class="text-2xl font-bold mb-1 text-center">Chỉnh sửa khóa học</h2>
 
       <form id="editCourseForm" method="POST" enctype="multipart/form-data" class="space-y-5">
         <!-- Tên khóa học -->
@@ -158,19 +158,19 @@
         <!-- Mô tả -->
         <div>
           <label class="block mb-1 font-medium text-gray-700">Mô tả</label>
-          <textarea id="edit_MoTa" name="Mo_Ta" rows="4" class="w-full border border-gray-300 rounded px-3 py-2"></textarea>
+          <textarea id="edit_MoTa" name="Mo_Ta" rows="4" class="w-full border border-gray-300 rounded px-3 py-1"></textarea>
         </div>
 
         <!-- Giá tiền -->
         <div>
           <label class="block mb-1 font-medium text-gray-700">Giá tiền</label>
-          <input type="number" id="edit_GiaTien" name="Gia_Tien" required class="w-full border border-gray-300 rounded px-3 py-2">
+          <input type="number" id="edit_GiaTien" name="Gia_Tien" required class="w-full border border-gray-300 rounded px-3 py-1">
         </div>
 
         <!-- Giảng viên -->
         <div>
           <label class="block mb-1 font-medium text-gray-700">Giảng viên</label>
-          <select id="edit_GiangVien" name="ID_Giang_Vien" required class="w-full border border-gray-300 rounded px-3 py-2">
+          <select id="edit_GiangVien" name="ID_Giang_Vien" required class="w-full border border-gray-300 rounded px-3 py-1">
             <% teachers.forEach(teacher => { %>
               <option value="<%= teacher._id %>"><%= teacher.Ten_Nguoi_Dung %></option>
             <% }) %>
@@ -180,7 +180,7 @@
         <!-- Môn học -->
         <div>
           <label class="block mb-1 font-medium text-gray-700">Môn học</label>
-          <select id="edit_MonHoc" name="ID_Mon_Hoc" required class="w-full border border-gray-300 rounded px-3 py-2">
+          <select id="edit_MonHoc" name="ID_Mon_Hoc" required class="w-full border border-gray-300 rounded px-3 py-1">
             <% subjects.forEach(subject => { %>
               <option value="<%= subject._id %>"><%= subject.Ten_Mon_Hoc %></option>
             <% }) %>
@@ -190,7 +190,7 @@
         <!-- Danh mục -->
         <div>
           <label class="block mb-1 font-medium text-gray-700">Danh mục</label>
-          <select id="edit_DanhMuc" name="ID_Danh_Muc" required class="w-full border border-gray-300 rounded px-3 py-2">
+          <select id="edit_DanhMuc" name="ID_Danh_Muc" required class="w-full border border-gray-300 rounded px-3 py-1">
             <% categories.forEach(cat => { %>
               <option value="<%= cat._id %>"><%= cat.Ten_Danh_Muc %></option>
             <% }) %>
@@ -200,12 +200,12 @@
         <!-- Hình ảnh -->
         <div>
           <label class="block mb-1 font-medium text-gray-700">Hình ảnh mới (nếu có)</label>
-          <input type="file" name="hinhanh" multiple class="w-full text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+          <input type="file" name="hinhanh" multiple class="w-full text-gray-700 file:mr-4 file:py-1 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
         </div>
 
         <!-- Submit -->
         <div class="text-right">
-          <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+          <button type="submit" class="bg-blue-600 text-white px-6 py-1 rounded hover:bg-blue-700 transition">
             Cập nhật khóa học
           </button>
         </div>
