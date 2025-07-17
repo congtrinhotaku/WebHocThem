@@ -235,12 +235,10 @@ const login = async (req, res, next) => {
 
     if (userData) {
       const isMatch = await comparePassword(req.body.password, userData.Mat_khau);
-
       if (isMatch) {
         req.session.loginSession = true;
         req.session.email = userData.Email;
         req.session.role = userData.Vai_Tro_Nguoi_Dung; // nếu bạn cần phân quyền
-
         return res.redirect('/');
       } else {
         return res.render('login', { error: 'Mật khẩu không chính xác' });
@@ -270,20 +268,19 @@ const loadProfile = async (req, res, next) => {
 // ======== CẬP NHẬT PROFILE ========
 const updateProfile = async (req, res, next) => {
   try {
-    const { Ten_Nguoi_Dung, So_Dien_Thoai, Dia_Chi } = req.body;
+    const { Ten_Nguoi_Dung, So_Dien_Thoai } = req.body;
     const email = req.session.email;
 
     const updatedUser = await NguoiDung.findOneAndUpdate(
       { Email: email },
-      { Ten_Nguoi_Dung, So_Dien_Thoai, Dia_Chi },
-      { new: true }
+      { Ten_Nguoi_Dung, So_Dien_Thoai },
     );
 
     if (!updatedUser) {
       return res.status(404).json({ success: false, message: 'Người dùng không tồn tại' });
     }
 
-    res.status(200).json({ success: true, message: 'Cập nhật thông tin thành công', user: updatedUser });
+    res.redirect('/profile');
   } catch (error) {
     next(new AppError('Cập nhật thông tin thất bại', 500));
   }

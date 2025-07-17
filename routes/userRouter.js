@@ -31,6 +31,9 @@ router.get("/resend-otp", userController.resendOtp); // Gửi lại OTP
 
 //profile - chỉnh sửa profile, đổi mật khẩu...
 router.get("/profile", userController.loadProfile);
+router.post("/profile", userController.updateProfile);
+// router.post('/upload-avatar/:id', upload.single('avatar'), userController.uploadAvatar);
+
 
 
 
