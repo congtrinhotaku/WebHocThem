@@ -1,0 +1,59 @@
+<%- include('../partials/user/headers') %>
+
+    <div class="container-fluid mt-2">
+        <div class="container">
+            <div class="row rounded overflow-hidden shadow-sm">
+                <!-- Cột trái: Thông tin + hình ảnh -->
+                <div class="col-md-8 p-4 bg-light">
+                    <h2 style="font-size: 40px; color: #009966; font-weight: 700; margin-top: 15px;">
+                        <%= course.Ten_Khoa_Hoc %>
+                    </h2>
+                    <p>
+                        <%= course.Mo_Ta_Ngan || 'Không có mô tả ngắn.' %>
+                    </p>
+                    <img src="/uploads/<%= course.hinhanh[0] %>" class="img-fluid rounded mt-3" alt="Ảnh khóa học">
+                </div>
+
+                <!-- Cột phải: Chi tiết khóa học -->
+                <div class="col-md-4 p-4" style="border-left: 2px dotted #ccc; text-align: center;">
+
+                    <h3 style="font-size: 28px; color: rgb(0, 166, 255); font-weight: bold;">Đăng Ký Trọn Gói Khóa Học
+                    </h3>
+
+                    <p style="font-size: 28px; color: #009933; font-weight: bold; margin: 10px 0;">
+                        <%= course.Gia_Tien.toLocaleString('vi-VN') %>đ
+                    </p>
+
+                    <button
+                        style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 6px; margin-bottom: 10px; cursor: pointer;">
+                        Học thử miễn phí
+                    </button>
+                    <br>
+                    <button
+                        style="background-color: white; color: #007bff; border: 2px solid #007bff; padding: 10px 20px; border-radius: 6px; cursor: pointer;">
+                        Đăng ký khóa học
+                    </button>
+                    <h6 class="fw-bold">Mục tiêu khóa học:</h6>
+                    <ul class="small ps-3 mb-3">
+                        <li>Nắm vững kiến thức nền tảng</li>
+                        <li>Phù hợp ôn luyện THPT & Đại học</li>
+                    </ul>
+
+                    <h6 class="fw-bold">Cấu trúc khóa học:</h6>
+                    <ul class="small ps-3 mb-3">
+                        <li>32 bài giảng</li>
+                        <li>12 buổi học online</li>
+                        <li>60 bài tập/ kiểm tra</li>
+                    </ul>
+
+                    <h6 class="fw-bold">Thời gian học:</h6>
+                    <ul class="small ps-3">
+                        <li>Bắt đầu: 13/03/2025</li>
+                        <li>Kết thúc: 13/09/2025</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Tabs thông tin chi tiết khóa học -->
+
+        </div>
+    </div>

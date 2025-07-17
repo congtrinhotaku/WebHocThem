@@ -8,6 +8,7 @@ const upload = require('../helpers/multer');
 const router = express.Router();
 
 router.get("/", indexController.getTrangChu);
+router.get("/detailcourse/:id",indexController.getDetailCourse)
 
 
 
